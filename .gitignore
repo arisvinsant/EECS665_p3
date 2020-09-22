@@ -3,3 +3,5 @@
 *.output
 *.hh
 *.cc
+*.txt
+*.holeyc

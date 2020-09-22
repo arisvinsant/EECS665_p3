@@ -56,4 +56,24 @@ void IntTypeNode::unparse(std::ostream& out, int indent){
 	out << "int";
 }
 
+void IntPtrNode::unparse(std::ostream& out, int indent){
+	out << "int *";
+}
+
+void BoolTypeNode::unparse(std::ostream& out, int indent){
+	out << "bool";
+}
+
+void BoolPtrNode::unparse(std::ostream& out, int indent){
+	out << "bool *";
+}
+
+void CharTypeNode::unparse(std::ostream& out, int indent){
+	out << "char";
+}
+
+void CharPtrNode::unparse(std::ostream& out, int indent){
+	out << "char *";
+}
+
 } // End namespace holeyc
