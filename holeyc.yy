@@ -208,7 +208,6 @@ type 		: INT
 						bool isPtr = false;
 						$$ = new CharTypeNode($1->line(), $1->col(), isPtr);
 					}
-					}
 				| CHARPTR
 					{
 						bool isPtr = true;
