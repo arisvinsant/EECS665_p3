@@ -137,6 +137,24 @@ create new translation value types
 %type <transType>       type
 %type <transID>         id
 
+//Need to double check attribute types below here
+//Must be declared above in %union secition
+%type <transFnDecl>			fnDecl
+%type <transFormals> 		formals
+%type <transFormalsList> 	formalsList
+%type <transFormalDecl>		formalDecl
+%type <transFnBody> 		fnBody
+%type <transStmtList> 		stmtList
+%type <transStmt> 			stmt
+%type <transExp> 			exp
+%type <transAssignExp> 		assignExp
+%type <transCallExp> 		callExp
+%type <transActualsList>	actualsList
+%type <transTerm>			term
+%type <transLVal> 			lVal
+
+
+
 %right ASSIGN
 %left OR
 %left AND
