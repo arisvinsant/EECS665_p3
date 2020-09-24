@@ -14,10 +14,63 @@ namespace holeyc{
 /* You may find it useful to forward declare AST subclasses
    here so that you can use a class before it's full definition
 */
-class DeclListNode;
+//class DeclListNode;
 class DeclNode;
 class TypeNode;
 class IDNode;
+
+class ExpNode;
+class ProgramNode;
+class StmtNode;
+//class TypeNode;
+class AssignExpNode;
+class BinaryExpNode;
+class CallExpNode;
+class CharLitNode;
+class FalseNode;
+class IntLitNode;
+class LValNode;
+class NullPtrNode;
+class StrLitNode;
+class TrueNode;
+class UnaryExpNode;
+class AssignStmtNode;
+class CallStmtNode;
+//class DeclNode;
+class FromConsoleStmtNode;
+class IfElseStmtNode;
+class IfStmtNode;
+class PostDecStmtNode;
+class PostIncStmtNode;
+class ReturnStmtNode;
+class ToConsoleStmtNode;
+class WhileStmtNode;
+class BoolTypeNode;
+class CharTypeNode;
+class IntTypeNode;
+class VoidTypeNode;
+class AndNode;
+class DivideNode;
+class EqualsNode;
+class GreaterEqNode;
+class GreaterNode;
+class LessEqNode;
+class LessNode;
+class MinusNode;
+class NotEqualsNode;
+class OrNode;
+class PlusNode;
+class TimesNode;
+class DerefNode;
+//class IDNode;
+class IndexNode;
+class RefNode;
+class NegNode;
+class NotNode;
+class FnDeclNode;
+class VarDeclNode;
+class FormalDeclNode;
+
 
 class ASTNode{
 public:
@@ -44,46 +97,22 @@ private:
 	size_t c; /// The column at which the node starts in the input file
 };
 
-/** 
-* \class ProgramNode
-* Class that contains the entire abstract syntax tree for a program.
-* Note the list of declarations encompasses all global declarations
-* which includes (obviously) all global variables and struct declarations
-* and (perhaps less obviously), all function declarations
-**/
+class ExpNode : public ASTNode{
+protected:
+	ExpNode(size_t l, size_t c) : ASTNode(l, c){}
+};
+
 class ProgramNode : public ASTNode{
 public:
-	ProgramNode(std::list<DeclNode *> * globalsIn) 
-	: ASTNode(1, 1), myGlobals(globalsIn){
-	}
+	ProgramNode(std::list<DeclNode *> * globalsIn) : ASTNode(1, 1), myGlobals(globalsIn){}
 	void unparse(std::ostream& out, int indent) override;
 private:
 	std::list<DeclNode * > * myGlobals;
 };
 
-
-/** \class DeclNode
-* Superclass for declarations (i.e. nodes that can be used to 
-* declare a struct, function, variable, etc).  This base class will 
-**/
-class DeclNode : public ASTNode{
+class StmtNode : public ASTNode{
 public:
-	DeclNode(size_t line, size_t col) 
-	: ASTNode(line, col) {
-	}
-	void unparse(std::ostream& out, int indent) override = 0;
-};
-
-/**  \class ExpNode
-* Superclass for expression nodes (i.e. nodes that can be used as
-* part of an expression).  Nodes that are part of an expression
-* should inherit from this abstract superclass.
-**/
-class ExpNode : public ASTNode{
-protected:
-	ExpNode(size_t line, size_t col) 
-	: ASTNode(line, col){
-	}
+	StmtNode(size_t l, size_t c) : ASTNode(l ,c) {}
 };
 
 /**  \class TypeNode
@@ -103,6 +132,85 @@ public:
 private:
 	bool myIsReference;
 };
+
+class AssignExpNode : public ExpNode{
+public:
+	AssignExpNode(LValNode* destLval, ExpNode* srcExp) : ExpNode(srcExp->line(), srcExp->col()){}
+};
+
+class BinaryExpNode : public ExpNode{
+public:
+	BinaryExpNode(ExpNode* lhs, ExpNode* rhs) : ExpNode(lhs->line(), lhs->col()){}
+};
+
+class CallExpNode : public ExpNode{
+public:
+	CallExpNode() : ExpNode(){}
+};
+
+class CharLitNode : public ExpNode{
+public:
+	CharLitNode(CharLitToken* charToken) : ExpNode(charToken->line(), charToken->col()){}
+};
+
+class FalseNode : public ExpNode{
+public:
+	FalseNode(Token* token) : ExpNode(token->line(), token->col()){}
+};
+
+class IntLitNode : public ExpNode{
+public:
+	IntLitNode(IntLitToken* intToken) : ExpNode(intToken->line(), intToken->col()){}
+};
+
+class LValNode : public ExpNode{
+public:
+	LValNode() : ExpNode(){}
+};
+
+class NullPtrNode : public ExpNode{
+public:
+	NullPtrNode() : ExpNode(){}
+};
+
+class StrLitNode : public ExpNode{
+public:
+	StrLitNode(StrToken* strToken) : ExpNode(strToken->line(), strToken->col()){}
+};
+
+class TrueNode : public ExpNode{
+public:
+	NullPtrNode(Token* token) : ExpNode(token->line(), token->col()){}
+};
+
+class UnaryExpNode : public ExpNode{
+public:
+	UnaryExpNode(ExpNode* exp) : ExpNode(exp->line(), exp->col()){}
+};
+
+
+
+
+
+
+
+
+
+/** \class DeclNode
+* Superclass for declarations (i.e. nodes that can be used to 
+* declare a struct, function, variable, etc).  This base class will 
+**/
+class DeclNode : public ASTNode{
+public:
+	DeclNode(size_t line, size_t col) 
+	: ASTNode(line, col) {
+	}
+	void unparse(std::ostream& out, int indent) override = 0;
+};
+
+
+
+
 
 /** An identifier. Note that IDNodes subclass
  * ExpNode because they can be used as part of an expression. 

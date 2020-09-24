@@ -170,8 +170,7 @@ globals 	: globals decl
 
 decl 		: varDecl SEMICOLON
 		  {
-		  //TODO: Make sure to fill out this rule
-		  // (as well as any other empty rule!)
+		  
 		  }
 		| fnDecl 
 		  { }
