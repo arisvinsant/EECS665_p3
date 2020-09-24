@@ -141,7 +141,7 @@ private:
 ///////////////////////
 class AssignExpNode : public ExpNode{
 public:
-	AssignExpNode(LValNode* destLval, ExpNode* srcExp) : ExpNode(srcExp->line(), srcExp->col()){}
+	AssignExpNode(ExpNode* srcExp) : ExpNode(srcExp->line(), srcExp->col()){}
 };
 
 class BinaryExpNode : public ExpNode{
@@ -171,7 +171,7 @@ public:
 
 class LValNode : public ExpNode{
 public:
-	LValNode(size_t l, size_t c) : ExpNode(l, c){}
+	LValNode(IDNode* id) : ExpNode(id->line(), id->col()){}
 };
 
 class NullPtrNode : public ExpNode{
@@ -301,7 +301,7 @@ public:
 
 class DivideNode : public BinaryExpNode{
 public: 
-	AndNode(ExpNode* lhs, ExpNode* rhs) : BinaryExpNode(lhs, rhs){}
+	DivideNode(ExpNode* lhs, ExpNode* rhs) : BinaryExpNode(lhs, rhs){}
 };
 
 class EqualsNode : public BinaryExpNode{
