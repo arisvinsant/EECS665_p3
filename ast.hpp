@@ -97,6 +97,9 @@ private:
 	size_t c; /// The column at which the node starts in the input file
 };
 
+///////////////////////
+//Children of ASTNode//
+///////////////////////
 class ExpNode : public ASTNode{
 protected:
 	ExpNode(size_t l, size_t c) : ASTNode(l, c){}
@@ -133,6 +136,9 @@ private:
 	bool myIsReference;
 };
 
+///////////////////////
+//Children of ExpNode//
+///////////////////////
 class AssignExpNode : public ExpNode{
 public:
 	AssignExpNode(LValNode* destLval, ExpNode* srcExp) : ExpNode(srcExp->line(), srcExp->col()){}
@@ -145,7 +151,7 @@ public:
 
 class CallExpNode : public ExpNode{
 public:
-	CallExpNode() : ExpNode(){}
+	CallExpNode(size_t l, size_t c) : ExpNode(l, c){}
 };
 
 class CharLitNode : public ExpNode{
@@ -165,12 +171,12 @@ public:
 
 class LValNode : public ExpNode{
 public:
-	LValNode() : ExpNode(){}
+	LValNode(size_t l, size_t c) : ExpNode(l, c){}
 };
 
 class NullPtrNode : public ExpNode{
 public:
-	NullPtrNode() : ExpNode(){}
+	NullPtrNode(size_t l, size_t c) : ExpNode(l, c){}
 };
 
 class StrLitNode : public ExpNode{
@@ -180,7 +186,7 @@ public:
 
 class TrueNode : public ExpNode{
 public:
-	NullPtrNode(Token* token) : ExpNode(token->line(), token->col()){}
+	TrueNode(Token* token) : ExpNode(token->line(), token->col()){}
 };
 
 class UnaryExpNode : public ExpNode{
@@ -188,7 +194,14 @@ public:
 	UnaryExpNode(ExpNode* exp) : ExpNode(exp->line(), exp->col()){}
 };
 
+////////////////////////
+//Children of StmtNode//
+////////////////////////
 
+class AssignStmtNode : public StmtNode{
+public:
+	AssignStmtNode(AssignExpNode* assignment) : StmtNode(assignment->line(), assignment->col()){}
+};
 
 
 
