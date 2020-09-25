@@ -231,6 +231,14 @@ void DerefNode::unparse(std::ostream& out, int indent){
 }
 
 void RefNode::unparse(std::ostream& out, int indent){
+
+}
+
+void CallExpNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void BinaryExpNode::unparse(std::ostream& out, int indent){
 	
 }
 

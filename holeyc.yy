@@ -354,11 +354,11 @@ assignExp	: lval ASSIGN exp
 
 callExp		: id LPAREN RPAREN
 		  		{ 
-					// $$ = new CallExpNode($1, new std::list<ExpNode*>);
+					$$ = new CallExpNode($1, new std::list<ExpNode*>);
 				}
 			| id LPAREN actualsList RPAREN
 				{ 
-					// $$ = new CallExpNode($1, $3);
+					$$ = new CallExpNode($1, $3);
 				}											
 
 actualsList	: exp
@@ -394,20 +394,14 @@ term 	: lval
 lval	: id
 				{ $$ = new LValNode($1); }
 			| id LBRACE exp RBRACE
-				{
-					$$ = new IndexNode($1, $3);
-				}
+				{ $$ = new IndexNode($1, $3); }
 			| AT id
-				{
-					$$ = new DerefNode($2);
-				}
+				{ $$ = new DerefNode($2); }
 			| CARAT id
-				{
-					$$ = new RefNode($2);
-				}
+				{ $$ = new RefNode($2); }
 
 id		: ID
-		  { $$ = new IDNode($1); }
+		  	{ $$ = new IDNode($1); }
 	
 %%
 

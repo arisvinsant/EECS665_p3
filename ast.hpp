@@ -164,11 +164,13 @@ public:
 class BinaryExpNode : public ExpNode{
 public:
 	BinaryExpNode(ExpNode* lhs, ExpNode* rhs) : ExpNode(lhs->line(), lhs->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class CallExpNode : public ExpNode{
 public:
 	CallExpNode(IDNode* id, std::list<ExpNode*>* paramList) : ExpNode(id->line(), id->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class CharLitNode : public ExpNode{
@@ -449,8 +451,14 @@ public:
 class FnDeclNode : public DeclNode{
 public:
 	FnDeclNode(TypeNode* type, IDNode* id, std::list<FormalDeclNode*>* params, std::list<StmtNode*>* body):
-	DeclNode(type->line(), type->col()){}
+	DeclNode(type->line(), type->col()), myType(type), myId(id), myParams(params), myBody(body){}
 	void unparse(std::ostream& out, int indent);
+
+private:
+	TypeNode* myType;
+	IDNode* myId;
+	std::list<FormalDeclNode*>* myParams;
+	std::list<StmtNode*>* myBody;
 };
 
 /** A variable declaration. Note that this class is intended to 
