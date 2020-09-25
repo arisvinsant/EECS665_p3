@@ -379,7 +379,7 @@ term 	: lval
 			| NULLPTR
 				{ $$ = new NullPtrNode($1->line(), $1->col()); }
 			| INTLITERAL 
-				{ $$ = new IntLitNode($1->line(), $1->col()); }
+				{ $$ = new IntLitNode($1->line(), $1->col(), $1); }
 			| STRLITERAL 
 				{ $$ = new StrLitNode($1->line(), $1->col()); }
 			| CHARLIT 

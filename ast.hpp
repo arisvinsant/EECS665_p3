@@ -191,10 +191,11 @@ public:
 
 class IntLitNode : public ExpNode{
 public:
-	IntLitNode(size_t l, size_t c) : ExpNode(l, c){}
+	IntLitNode(size_t l, size_t c, IntLitNode* intIn) : ExpNode(l, c), myInt( /* ????? */ ){}
 	void unparse(std::ostream& out, int indent);
 
 private:
+	int* myInt;
 };
 
 class NullPtrNode : public ExpNode{
