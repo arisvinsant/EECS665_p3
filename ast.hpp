@@ -62,7 +62,7 @@ class OrNode;
 class PlusNode;
 class TimesNode;
 class DerefNode;
-//class IDNode;
+// class IDNode;
 class IndexNode;
 class RefNode;
 class NegNode;
@@ -116,6 +116,16 @@ private:
 class StmtNode : public ASTNode{
 public:
 	StmtNode(size_t l, size_t c) : ASTNode(l ,c) {}
+};
+
+class IDNode : public ExpNode{
+public:
+	IDNode(IDToken * token) : ExpNode(token->line(), token->col()), myStrVal(token->value()){
+		myStrVal = token->value();
+	}
+	void unparse(std::ostream& out, int indent);
+private:
+	std::string myStrVal;
 };
 
 /**  \class TypeNode
@@ -358,16 +368,6 @@ public:
 	RefNode(IDNode* accessId) : ExpNode(accessId->line(), accessId->col()){}
 };
 
-class IDNode : public ExpNode{
-public:
-	IDNode(IDToken * token) : ExpNode(token->line(), token->col()), myStrVal(token->value()){
-		myStrVal = token->value();
-	}
-	void unparse(std::ostream& out, int indent);
-private:
-	std::string myStrVal;
-};
-
 class IndexNode : public ExpNode{
 public:
 	IndexNode(IDNode* accessId, ExpNode* offset) : ExpNode(accessId->line(), accessId->col()){}
@@ -416,7 +416,7 @@ private:
 
 class FormalDeclNode : public DeclNode{
 public:
-	FormalDeclNode(TypeNode* type, IdNode* id) : DeclNode(type->line(), type->col()){}
+	FormalDeclNode(TypeNode* type, IDNode* id) : DeclNode(type->line(), type->col()){}
 };
 
 } //End namespace holeyc
