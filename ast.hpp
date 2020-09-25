@@ -116,6 +116,7 @@ private:
 class StmtNode : public ASTNode{
 public:
 	StmtNode(size_t l, size_t c) : ASTNode(l ,c) {}
+	virtual void unparse(std::ostream& out, int indent) = 0;
 };
 
 class IDNode : public ExpNode{
@@ -157,8 +158,11 @@ public:
 ///////////////////////
 class AssignExpNode : public ExpNode{
 public:
-	AssignExpNode(LValNode* lVal, ExpNode* srcExp) : ExpNode(lVal->line(), lVal->col()){}
+	AssignExpNode(LValNode* lVal, ExpNode* srcExp) : ExpNode(lVal->line(), lVal->col()), myLVal(lVal), myExp(srcExp){}
 	void unparse(std::ostream& out, int indent);
+private:
+	LValNode* myLVal;
+	ExpNode* myExp;
 };
 
 class BinaryExpNode : public ExpNode{
@@ -189,6 +193,8 @@ class IntLitNode : public ExpNode{
 public:
 	IntLitNode(size_t l, size_t c) : ExpNode(l, c){}
 	void unparse(std::ostream& out, int indent);
+
+private:
 };
 
 class NullPtrNode : public ExpNode{
@@ -220,8 +226,10 @@ public:
 
 class AssignStmtNode : public StmtNode{
 public:
-	AssignStmtNode(AssignExpNode* assignment) : StmtNode(assignment->line(), assignment->col()){}
+	AssignStmtNode(AssignExpNode* assignment) : StmtNode(assignment->line(), assignment->col()), myAssign(assignment){}
 	void unparse(std::ostream& out, int indent);
+private:
+	AssignExpNode* myAssign;
 };
 
 class CallStmtNode : public StmtNode{
@@ -484,8 +492,12 @@ private:
 
 class FormalDeclNode : public DeclNode{
 public:
-	FormalDeclNode(TypeNode* type, IDNode* id) : DeclNode(type->line(), type->col()){}
+	FormalDeclNode(TypeNode* type, IDNode* id) : DeclNode(type->line(), type->col()), myType(type), myId(id){}
 	void unparse(std::ostream& out, int indent);
+
+private:
+	TypeNode * myType;
+	IDNode * myId;
 };
 
 } //End namespace holeyc

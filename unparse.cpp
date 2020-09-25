@@ -77,15 +77,27 @@ void CharPtrNode::unparse(std::ostream& out, int indent){
 }
 
 void VoidTypeNode::unparse(std::ostream& out, int indent){
-	out << "char";
+	out << "void";
 }
 
 void FnDeclNode::unparse(std::ostream& out, int indent){
-	
+	doIndent(out, indent);
+	this->myType->unparse(out, 0);
+	out << " ";
+	this->myId->unparse(out, 0);
+	out << "(";
+	for (auto param: *myParams)
+		param->unparse(out, 0);
+	out << ") {\n";
+	for (auto line: *myBody){
+		line->unparse(out, indent);
+	}
+	out << "}\n";
 }
 
 void AssignStmtNode::unparse(std::ostream& out, int indent){
-	
+	this->myAssign->unparse(out, 0);
+	out<< ";\n";
 }
 
 void DeclNode::unparse(std::ostream& out, int indent){
@@ -129,7 +141,9 @@ void CallStmtNode::unparse(std::ostream& out, int indent){
 }
 
 void AssignExpNode::unparse(std::ostream& out, int indent){
-	
+	this->myLVal->unparse(out, 0);
+	out << " = ";
+	this->myExp->unparse(out, 0);
 }
 
 void MinusNode::unparse(std::ostream& out, int indent){
@@ -189,7 +203,9 @@ void NegNode::unparse(std::ostream& out, int indent){
 }
 
 void FormalDeclNode::unparse(std::ostream& out, int indent){
-	
+	this->myType->unparse(out, 0);
+	out << " ";
+	this->myId->unparse(out, 0);
 }
 
 void NullPtrNode::unparse(std::ostream& out, int indent){
