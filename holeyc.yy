@@ -60,14 +60,32 @@ TODO: You will have to add to this list to
 create new translation value types
 */
 %union {
-   holeyc::Token *                     transToken;
-   holeyc::IDToken *                   transIDToken;
-   holeyc::ProgramNode *               transProgram;
-   std::list<holeyc::DeclNode *> *     transDeclList;
-   holeyc::DeclNode *                  transDecl;
-   holeyc::VarDeclNode *               transVarDecl;
-   holeyc::TypeNode *                  transType;
-   holeyc::IDNode *                    transID;
+   holeyc::Token *                     		transToken;
+   holeyc::IDToken *                   		transIDToken;
+   holeyc::ProgramNode *               		transProgram;
+   std::list<holeyc::DeclNode *> *     		transDeclList;
+   holeyc::DeclNode *                  		transDecl;
+   holeyc::VarDeclNode *               		transVarDecl;
+   holeyc::TypeNode *                  		transType;
+   holeyc::IDNode *                    		transID;
+
+	 holeyc::FnDeclNode * 							 		transFnDecl;
+	 std::list<holeyc::FormalDeclNode *> * 	transFormalsList;
+	 holeyc::FormalDeclNode * 					 		transFormals;
+	 holeyc::FormalDeclNode * 							transFormalDecl;
+	 std::list<holeyc::StmtNode *> *        transFnBody;
+	 std::list<holeyc::StmtNode *> *        transStmtList;
+	 holeyc::StmtNode * 									 	transStmt;
+	 holeyc::ExpNode * 									 		transExp;
+	 holeyc::AssignExpNode * 								transAssignExp;
+	 holeyc::CallExpNode * 									transCallExp;
+	 holeyc::ExpNode *                      transTerm;
+	 holeyc::LValNode * 									 	transLVal;
+
+	 holeyc::IntLitNode	*										transIntToken;
+	 holeyc::CharLitNode	*									transCharToken;
+	 holeyc::StrLitNode	*										transStrToken;
+
 }
 
 %define parse.assert
@@ -139,19 +157,20 @@ create new translation value types
 
 //Need to double check attribute types below here
 //Must be declared above in %union secition
-%type <transFnDecl>			fnDecl
-%type <transFormals> 		formals
+
+%type <transFnDecl>				fnDecl
+%type <transFormals> 			formals
 %type <transFormalsList> 	formalsList
 %type <transFormalDecl>		formalDecl
-%type <transFnBody> 		fnBody
+%type <transFnBody> 			fnBody
 %type <transStmtList> 		stmtList
-%type <transStmt> 			stmt
-%type <transExp> 			exp
+%type <transStmt> 				stmt
+%type <transExp> 					exp
 %type <transAssignExp> 		assignExp
-%type <transCallExp> 		callExp
-%type <transActualsList>	actualsList
-%type <transTerm>			term
-%type <transLVal> 			lVal
+%type <transCallExp> 			callExp
+/* %type <transActualsList>	actualsList */
+%type <transTerm>					term
+%type <transLVal> 				lval
 
 
 
@@ -203,43 +222,43 @@ varDecl 	: type id
 type 	: INT
 				{
 					bool isPtr = false;
-					$$ = new IntTypeNode($1->line(), $1->col(), isPtr);
+					// $$ = new IntTypeNode($1->line(), $1->col(), isPtr);
 				}
 			| INTPTR
 				{ 
 					bool isPtr = true;
-					$$ = new IntPtrNode($1->line(), $1->col(), isPtr);
+					// $$ = new IntPtrNode($1->line(), $1->col(), isPtr);
 				}
 			| BOOL
 				{ 
 					bool isPtr = false;
-					$$ = new BoolTypeNode($1->line(), $1->col(), isPtr);
+					// $$ = new BoolTypeNode($1->line(), $1->col(), isPtr);
 				}
 			| BOOLPTR
 				{
 					bool isPtr = true;
-					$$ = new BoolPtrNode($1->line(), $1->col(), isPtr);
+					// $$ = new BoolPtrNode($1->line(), $1->col(), isPtr);
 				}
 			| CHAR
 				{
 					bool isPtr = false;
-					$$ = new CharTypeNode($1->line(), $1->col(), isPtr);
+					// $$ = new CharTypeNode($1->line(), $1->col(), isPtr);
 				}
 			| CHARPTR
 				{
 					bool isPtr = true;
-					$$ = new CharPtrNode($1->line(), $1->col(), isPtr);
+					// $$ = new CharPtrNode($1->line(), $1->col(), isPtr);
 				}
 			| VOID
 				{
 					bool isPtr = false;
-					$$ = new CharPtrNode($1->line(), $1->col(), isPtr); 
+					// $$ = new VoidTypeNode($1->line(), $1->col(), isPtr); 
 				}
 
 
 fnDecl 		: type id formals fnBody
 		  { 
-			  $$ = new FnDeclNode($1, $2, $3, $4);
+			  // $$ = new FnDeclNode($1, $2, $3, $4);
 		  }
 
 formals 	: LPAREN RPAREN
@@ -268,7 +287,7 @@ stmt		: varDecl SEMICOLON
 		  { }
 		| assignExp SEMICOLON
 		  { 
-			  $$ = new AssignStmtNode($1);
+			  // $$ = new AssignStmtNode($1);
 		  }
 		| lval DASHDASH SEMICOLON
 		  { }
@@ -293,63 +312,63 @@ stmt		: varDecl SEMICOLON
 
 exp		: assignExp 
 		  { 
-			  $$ = new AssignExpNode($1);
+			  // $$ = new AssignExpNode($1);
 		  }
 		| exp DASH exp
 		  { 
-			  $$ = new MinusNode($1, $3);
+			  // $$ = new MinusNode($1, $3);
 		  }
 		| exp CROSS exp
 		  { 
-			  $$ = new PlusNode($1, $3);
+			  // $$ = new PlusNode($1, $3);
 		  }
 		| exp STAR exp
 		  {
-			  $$ = new TimesNode($1, $3);
+			  // $$ = new TimesNode($1, $3);
 		   }
 		| exp SLASH exp
 		  { 
-			  $$ = new DivideNode($1, $3);
+			  // $$ = new DivideNode($1, $3);
 		  }
 		| exp AND exp
 		  { 
-			  $$ = new AndNode($1, $3);
+			  // $$ = new AndNode($1, $3);
 		  }
 		| exp OR exp
 		  { 
-			  $$ = new OrNode($1, $3);
+			  // $$ = new OrNode($1, $3);
 		  }
 		| exp EQUALS exp
 		  { 
-			  $$ = new EqualsNode($1, $3);
+			  // $$ = new EqualsNode($1, $3);
 		  }
 		| exp NOTEQUALS exp
 		  { 
-			  $$ = new NotEqualsNode($1, $3);
+			  // $$ = new NotEqualsNode($1, $3);
 		  }
 		| exp GREATER exp
 		  { 
-			  $$ = new GreaterNode($1, $3);
+			  // $$ = new GreaterNode($1, $3);
 		  }
 		| exp GREATEREQ exp
 		  { 
-			  $$ = new GreaterEqNode($1, $3);
+			  // $$ = new GreaterEqNode($1, $3);
 		  }
 		| exp LESS exp
 		  { 
-			  $$ = new LessNode($1, $3);
+			  // $$ = new LessNode($1, $3);
 		  }
 		| exp LESSEQ exp
 		  { 
-			  $$ = new LessEqNode($1, $3);
+			  // $$ = new LessEqNode($1, $3);
 		  }
 		| NOT exp
 		  { 
-			  $$ = new NotNode($2);
+			  // $$ = new NotNode($2);
 		  }
 		| DASH term
 		  { 
-			  $$ = new NegNode($2);
+			  // $$ = new NegNode($2);
 		  }
 		| term 
 		  { 
@@ -369,7 +388,7 @@ actualsList	: exp
 		| actualsList COMMA exp
 		  { }
 
-term 		: lval
+term 	: lval
 		  { 
 			  $$ = $1;
 		  }
@@ -379,27 +398,27 @@ term 		: lval
 		  }
 		| NULLPTR
 		  { 
-			  $$ = new NullPtrNode($1->line(), $1->col());
+			  // $$ = new NullPtrNode($1->line(), $1->col());
 		  }
 		| INTLITERAL 
 		  { 
-			  $$ = new IntLitNode($1);
+			  // $$ = new IntLitNode($1);
 		  }
 		| STRLITERAL 
 		  { 
-			  $$ = new StrLitNode($1);
+			  // $$ = new StrLitNode($1);
 		  }
 		| CHARLIT 
 		  { 
-			  $$ = new CharLitNode($1);
+			  // $$ = new CharLitNode($1);
 		  }
 		| TRUE
 		  { 
-			  $$ = new TrueNode($1);
+			  // $$ = new TrueNode($1);
 		  }
 		| FALSE
 		  { 
-			  $$ = new FalseNode($1);
+			  // $$ = new FalseNode($1);
 		  }
 		| LPAREN exp RPAREN
 		  { 
@@ -408,11 +427,11 @@ term 		: lval
 
 lval		: id
 		  {
-			  $$ = newLValNode($1);
+			  // $$ = new LValNode($1);
 		  }
 		| id LBRACE exp RBRACE
 		  {
-			  $$ = new IndexNode($1, $3);
+			  // $$ = new IndexNode($1, $3);
 		  }
 		| AT id
 		  {
@@ -425,7 +444,7 @@ lval		: id
 
 id		: ID
 		  {
-			$$ = new IDNode($1);
+			// $$ = new IDNode($1);
 		  }
 	
 %%

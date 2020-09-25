@@ -208,11 +208,6 @@ public:
 	CallStmtNode(CallExpNode* call) : StmtNode(call->line(), call->col()){}
 };
 
-class CallStmtNode : public StmtNode{
-public:
-	CallStmtNode(CallExpNode* call) : StmtNode(call->line(), call->col()){}
-};
-
 class DeclNode : public StmtNode{
 public:
 	DeclNode(size_t l, size_t c) : StmtNode(l, c) {
@@ -223,11 +218,6 @@ public:
 class FromConsoleStmtNode : public StmtNode{
 public:
 	FromConsoleStmtNode(LValNode* lVal) : StmtNode(lVal->line(), lVal->col()){}
-};
-
-class CallStmtNode : public StmtNode{
-public:
-	CallStmtNode(CallExpNode* call) : StmtNode(call->line(), call->col()){}
 };
 
 class IfElseStmtNode : public StmtNode{
@@ -427,54 +417,6 @@ private:
 class FormalDeclNode : public DeclNode{
 public:
 	FormalDeclNode(TypeNode* type, IdNode* id) : DeclNode(type->line(), type->col()){}
-};
-
-class IntPtrNode : public TypeNode{
-public:
-	IntPtrNode(size_t lineIn, size_t colIn, bool isRefIn)
-	: TypeNode(lineIn, colIn, isRefIn){ 
-	}
-	void unparse(std::ostream& out, int indent);
-};
-
-class BoolTypeNode : public TypeNode{
-public:
-	BoolTypeNode(size_t lineIn, size_t colIn, bool isRefIn)
-	: TypeNode(lineIn, colIn, isRefIn){ 
-	}
-	void unparse(std::ostream& out, int indent);
-};
-
-class BoolPtrNode : public TypeNode{
-public:
-	BoolPtrNode(size_t lineIn, size_t colIn, bool isRefIn)
-	: TypeNode(lineIn, colIn, isRefIn){ 
-	}
-	void unparse(std::ostream& out, int indent);
-};
-
-class CharTypeNode : public TypeNode{
-public:
-	CharTypeNode(size_t lineIn, size_t colIn, bool isRefIn)
-	: TypeNode(lineIn, colIn, isRefIn){ 
-	}
-	void unparse(std::ostream& out, int indent);
-};
-
-class CharPtrNode : public TypeNode{
-public:
-	CharPtrNode(size_t lineIn, size_t colIn, bool isRefIn)
-	: TypeNode(lineIn, colIn, isRefIn){ 
-	}
-	void unparse(std::ostream& out, int indent);
-};
-
-class VoidTypeNode : public TypeNode{
-public:
-	VoidTypeNode(size_t lineIn, size_t colIn, bool isRefIn)
-	: TypeNode(lineIn, colIn, isRefIn){ 
-	}
-	void unparse(std::ostream& out, int indent);
 };
 
 } //End namespace holeyc
