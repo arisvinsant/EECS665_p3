@@ -137,6 +137,24 @@ create new translation value types
 %type <transType>       type
 %type <transID>         id
 
+//Need to double check attribute types below here
+//Must be declared above in %union secition
+%type <transFnDecl>			fnDecl
+%type <transFormals> 		formals
+%type <transFormalsList> 	formalsList
+%type <transFormalDecl>		formalDecl
+%type <transFnBody> 		fnBody
+%type <transStmtList> 		stmtList
+%type <transStmt> 			stmt
+%type <transExp> 			exp
+%type <transAssignExp> 		assignExp
+%type <transCallExp> 		callExp
+%type <transActualsList>	actualsList
+%type <transTerm>			term
+%type <transLVal> 			lVal
+
+
+
 %right ASSIGN
 %left OR
 %left AND
@@ -170,57 +188,59 @@ globals 	: globals decl
 
 decl 		: varDecl SEMICOLON
 		  {
-		  //TODO: Make sure to fill out this rule
-		  // (as well as any other empty rule!)
 		  }
 		| fnDecl 
-		  { }
+		  {
+		  }
 
 varDecl 	: type id
 		  { 
-		  size_t typeLine = $1->line();
-		  size_t typeCol = $1->col();
-		  $$ = new VarDeclNode(typeLine, typeCol, $1, $2);
+		  	size_t typeLine = $1->line();
+		  	size_t typeCol = $1->col();
+		  	$$ = new VarDeclNode(typeLine, typeCol, $1, $2);
 		  }
 
-type 		: INT
-					{
-						bool isPtr = false;
-						$$ = new IntTypeNode($1->line(), $1->col(), isPtr);
-					}
-				| INTPTR
-					{ 
-						bool isPtr = true;
-						$$ = new IntPtrNode($1->line(), $1->col(), isPtr);
-					}
-				| BOOL
-					{ 
-						bool isPtr = false;
-						$$ = new BoolTypeNode($1->line(), $1->col(), isPtr);
-					}
-				| BOOLPTR
-					{
-						bool isPtr = true;
-						$$ = new BoolPtrNode($1->line(), $1->col(), isPtr);
-					}
-				| CHAR
-					{
-						bool isPtr = false;
-						$$ = new CharTypeNode($1->line(), $1->col(), isPtr);
-					}
-				| CHARPTR
-					{
-						bool isPtr = true;
-						$$ = new CharPtrNode($1->line(), $1->col(), isPtr);
-					}
-				| VOID
-					{
-						bool isPtr = false;
-						$$ = new CharPtrNode($1->line(), $1->col(), isPtr); 
-					}
+type 	: INT
+				{
+					bool isPtr = false;
+					$$ = new IntTypeNode($1->line(), $1->col(), isPtr);
+				}
+			| INTPTR
+				{ 
+					bool isPtr = true;
+					$$ = new IntPtrNode($1->line(), $1->col(), isPtr);
+				}
+			| BOOL
+				{ 
+					bool isPtr = false;
+					$$ = new BoolTypeNode($1->line(), $1->col(), isPtr);
+				}
+			| BOOLPTR
+				{
+					bool isPtr = true;
+					$$ = new BoolPtrNode($1->line(), $1->col(), isPtr);
+				}
+			| CHAR
+				{
+					bool isPtr = false;
+					$$ = new CharTypeNode($1->line(), $1->col(), isPtr);
+				}
+			| CHARPTR
+				{
+					bool isPtr = true;
+					$$ = new CharPtrNode($1->line(), $1->col(), isPtr);
+				}
+			| VOID
+				{
+					bool isPtr = false;
+					$$ = new CharPtrNode($1->line(), $1->col(), isPtr); 
+				}
+
 
 fnDecl 		: type id formals fnBody
-		  { }
+		  { 
+			  $$ = new FnDeclNode($1, $2, $3, $4);
+		  }
 
 formals 	: LPAREN RPAREN
 		  { }
@@ -247,7 +267,9 @@ stmtList 	: /* epsilon */
 stmt		: varDecl SEMICOLON
 		  { }
 		| assignExp SEMICOLON
-		  { }
+		  { 
+			  $$ = new AssignStmtNode($1);
+		  }
 		| lval DASHDASH SEMICOLON
 		  { }
 		| lval CROSSCROSS SEMICOLON
@@ -270,37 +292,69 @@ stmt		: varDecl SEMICOLON
 		  { }
 
 exp		: assignExp 
-		  { }
+		  { 
+			  $$ = new AssignExpNode($1);
+		  }
 		| exp DASH exp
-		  { }
+		  { 
+			  $$ = new MinusNode($1, $3);
+		  }
 		| exp CROSS exp
-		  { }
+		  { 
+			  $$ = new PlusNode($1, $3);
+		  }
 		| exp STAR exp
-		  { }
+		  {
+			  $$ = new TimesNode($1, $3);
+		   }
 		| exp SLASH exp
-		  { }
+		  { 
+			  $$ = new DivideNode($1, $3);
+		  }
 		| exp AND exp
-		  { }
+		  { 
+			  $$ = new AndNode($1, $3);
+		  }
 		| exp OR exp
-		  { }
+		  { 
+			  $$ = new OrNode($1, $3);
+		  }
 		| exp EQUALS exp
-		  { }
+		  { 
+			  $$ = new EqualsNode($1, $3);
+		  }
 		| exp NOTEQUALS exp
-		  { }
+		  { 
+			  $$ = new NotEqualsNode($1, $3);
+		  }
 		| exp GREATER exp
-		  { }
+		  { 
+			  $$ = new GreaterNode($1, $3);
+		  }
 		| exp GREATEREQ exp
-		  { }
+		  { 
+			  $$ = new GreaterEqNode($1, $3);
+		  }
 		| exp LESS exp
-		  { }
+		  { 
+			  $$ = new LessNode($1, $3);
+		  }
 		| exp LESSEQ exp
-		  { }
+		  { 
+			  $$ = new LessEqNode($1, $3);
+		  }
 		| NOT exp
-		  { }
+		  { 
+			  $$ = new NotNode($2);
+		  }
 		| DASH term
-		  { }
+		  { 
+			  $$ = new NegNode($2);
+		  }
 		| term 
-		  { }
+		  { 
+			  $$ = $1;
+		  }
 
 assignExp	: lval ASSIGN exp
 		  { }
@@ -316,40 +370,62 @@ actualsList	: exp
 		  { }
 
 term 		: lval
-		  { }
+		  { 
+			  $$ = $1;
+		  }
 		| callExp
-		  { }
+		  { 
+			  //Not sure what this does
+		  }
 		| NULLPTR
-		  { }
+		  { 
+			  $$ = new NullPtrNode($1->line(), $1->col());
+		  }
 		| INTLITERAL 
-		  { }
+		  { 
+			  $$ = new IntLitNode($1);
+		  }
 		| STRLITERAL 
-		  { }
+		  { 
+			  $$ = new StrLitNode($1);
+		  }
 		| CHARLIT 
-		  { }
+		  { 
+			  $$ = new CharLitNode($1);
+		  }
 		| TRUE
-		  { }
+		  { 
+			  $$ = new TrueNode($1);
+		  }
 		| FALSE
-		  { }
+		  { 
+			  $$ = new FalseNode($1);
+		  }
 		| LPAREN exp RPAREN
-		  { }
+		  { 
+			$$ = $2;
+		  }
 
 lval		: id
 		  {
+			  $$ = newLValNode($1);
 		  }
 		| id LBRACE exp RBRACE
 		  {
+			  $$ = new IndexNode($1, $3);
 		  }
 		| AT id
 		  {
+			  //Not sure what AT does
 		  }
 		| CARAT id
 		  {
+			  //Not sure what CARAT does
 		  }
 
 id		: ID
 		  {
-		  $$ = new IDNode($1);
+			$$ = new IDNode($1);
 		  }
 	
 %%
