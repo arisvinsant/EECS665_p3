@@ -52,28 +52,32 @@ void IDNode::unparse(std::ostream& out, int indent){
 	out << this->myStrVal;
 }
 
-// void IntTypeNode::unparse(std::ostream& out, int indent){
-// 	out << "int";
-// }
+void IntTypeNode::unparse(std::ostream& out, int indent){
+	out << "int";
+}
 
-// void IntPtrNode::unparse(std::ostream& out, int indent){
-// 	out << "int *";
-// }
+void IntPtrNode::unparse(std::ostream& out, int indent){
+	out << "int *";
+}
 
-// void BoolTypeNode::unparse(std::ostream& out, int indent){
-// 	out << "bool";
-// }
+void BoolTypeNode::unparse(std::ostream& out, int indent){
+	out << "bool";
+}
 
-// void BoolPtrNode::unparse(std::ostream& out, int indent){
-// 	out << "bool *";
-// }
+void BoolPtrNode::unparse(std::ostream& out, int indent){
+	out << "bool *";
+}
 
-// void CharTypeNode::unparse(std::ostream& out, int indent){
-// 	out << "char";
-// }
+void CharTypeNode::unparse(std::ostream& out, int indent){
+	out << "char";
+}
 
-// void CharPtrNode::unparse(std::ostream& out, int indent){
-// 	out << "char *";
-// }
+void CharPtrNode::unparse(std::ostream& out, int indent){
+	out << "char *";
+}
+
+void VoidTypeNode::unparse(std::ostream& out, int indent){
+	out << "char";
+}
 
 } // End namespace holeyc

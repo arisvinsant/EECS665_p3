@@ -272,11 +272,25 @@ public:
 class BoolTypeNode : public TypeNode{
 public:
 	BoolTypeNode(size_t l, size_t c, bool refIn) : TypeNode(l, c, refIn){}
+	void unparse(std::ostream& out, int indent);
+};
+
+class BoolPtrNode : public TypeNode{
+public:
+	BoolPtrNode(size_t l, size_t c, bool refIn) : TypeNode(l, c, refIn){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class CharTypeNode : public TypeNode{
 public:
 	CharTypeNode(size_t l, size_t c, bool refIn) : TypeNode(l, c, refIn){}
+	void unparse(std::ostream& out, int indent);
+};
+
+class CharPtrNode : public TypeNode{
+public:
+	CharPtrNode(size_t l, size_t c, bool refIn) : TypeNode(l, c, refIn){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class IntTypeNode : public TypeNode{
@@ -285,9 +299,16 @@ public:
 	void unparse(std::ostream& out, int indent);
 };
 
+class IntPtrNode : public TypeNode{
+public:
+	IntPtrNode(size_t l, size_t c, bool isRefIn): TypeNode(l, c, isRefIn){}
+	void unparse(std::ostream& out, int indent);
+};
+
 class VoidTypeNode : public TypeNode{
 public:
 	VoidTypeNode(size_t l, size_t c, bool refIn) : TypeNode(l, c, refIn){}
+	void unparse(std::ostream& out, int indent);
 };
 
 /////////////////////////////
