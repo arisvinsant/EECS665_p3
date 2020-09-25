@@ -80,4 +80,112 @@ void VoidTypeNode::unparse(std::ostream& out, int indent){
 	out << "char";
 }
 
+void FnDeclNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void AssignStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void DeclNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void PostDecStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void PostIncStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void FromConsoleStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void ToConsoleStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void IfStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void IfElseStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void WhileStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void ReturnStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void CallStmtNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void AssignExpNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void MinusNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void PlusNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void TimesNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void DivideNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void AndNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void OrNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void EqualsNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void NotEqualsNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void GreaterNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void GreaterEqNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void LessNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void LessEqNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void NotNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void NegNode::unparse(std::ostream& out, int indent){
+	
+}
+
 } // End namespace holeyc

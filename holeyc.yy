@@ -71,7 +71,7 @@ create new translation value types
 
 	 holeyc::FnDeclNode * 							 		transFnDecl;
 	 std::list<holeyc::FormalDeclNode *> * 	transFormalsList;
-	 holeyc::FormalDeclNode * 					 		transFormals;
+	 std::list<holeyc::FormalDeclNode *> * 	transFormals;
 	 holeyc::FormalDeclNode * 							transFormalDecl;
 	 std::list<holeyc::StmtNode *> *        transFnBody;
 	 std::list<holeyc::StmtNode *> *        transStmtList;
@@ -258,7 +258,7 @@ type 	: INT
 
 fnDecl 		: type id formals fnBody
 		  { 
-			  // $$ = new FnDeclNode($1, $2, $3, $4);
+			  $$ = new FnDeclNode($1, $2, $3, $4);
 		  }
 
 formals 	: LPAREN RPAREN
@@ -284,96 +284,62 @@ stmtList 	: /* epsilon */
 		  { }
 
 stmt		: varDecl SEMICOLON
-		  { }
+		  { $$ = new DeclNode($1->line(), $1->col()); }
 		| assignExp SEMICOLON
-		  { 
-			  // $$ = new AssignStmtNode($1);
-		  }
+		  { $$ = new AssignStmtNode($1); }
 		| lval DASHDASH SEMICOLON
-		  { }
+		  { $$ = new PostDecStmtNode($1); }
 		| lval CROSSCROSS SEMICOLON
-		  { }
+		  { $$ = new PostIncStmtNode($1); }
 		| FROMCONSOLE lval SEMICOLON
-		  { }
+		  { $$ = new FromConsoleStmtNode($2); }
 		| TOCONSOLE exp SEMICOLON
-		  { }
+		  { $$ = new ToConsoleStmtNode($2); }
 		| IF LPAREN exp RPAREN LCURLY stmtList RCURLY
-		  { }
+		   { $$ = new IfStmtNode($3, $6); }
 		| IF LPAREN exp RPAREN LCURLY stmtList RCURLY ELSE LCURLY stmtList RCURLY
-		  { }
+		  { $$ = new IfElseStmtNode($3, $6, $10); }
 		| WHILE LPAREN exp RPAREN LCURLY stmtList RCURLY
-		  { }
+		  { $$ = new WhileStmtNode($3, $6); }
 		| RETURN exp SEMICOLON
-		  { }
+		  { $$ = new ReturnStmtNode($2); }
 		| RETURN SEMICOLON
-		  { }
+		  {                                           /*NOT SURE WHAT TO DO HERE */ }
 		| callExp SEMICOLON
-		  { }
+		  { $$ = new CallStmtNode($1); }
 
 exp		: assignExp 
-		  { 
-			  // $$ = new AssignExpNode($1);
-		  }
+		  { $$ = new AssignExpNode($1); }
 		| exp DASH exp
-		  { 
-			  // $$ = new MinusNode($1, $3);
-		  }
+		  { $$ = new MinusNode($1, $3); }
 		| exp CROSS exp
-		  { 
-			  // $$ = new PlusNode($1, $3);
-		  }
+		  { $$ = new PlusNode($1, $3); }
 		| exp STAR exp
-		  {
-			  // $$ = new TimesNode($1, $3);
-		   }
+		  { $$ = new TimesNode($1, $3); }
 		| exp SLASH exp
-		  { 
-			  // $$ = new DivideNode($1, $3);
-		  }
+		  { $$ = new DivideNode($1, $3); }
 		| exp AND exp
-		  { 
-			  // $$ = new AndNode($1, $3);
-		  }
+		  { $$ = new AndNode($1, $3); }
 		| exp OR exp
-		  { 
-			  // $$ = new OrNode($1, $3);
-		  }
+		  { $$ = new OrNode($1, $3); }
 		| exp EQUALS exp
-		  { 
-			  // $$ = new EqualsNode($1, $3);
-		  }
+		  { $$ = new EqualsNode($1, $3); }
 		| exp NOTEQUALS exp
-		  { 
-			  // $$ = new NotEqualsNode($1, $3);
-		  }
+		  { $$ = new NotEqualsNode($1, $3); }
 		| exp GREATER exp
-		  { 
-			  // $$ = new GreaterNode($1, $3);
-		  }
+		  { $$ = new GreaterNode($1, $3); }
 		| exp GREATEREQ exp
-		  { 
-			  // $$ = new GreaterEqNode($1, $3);
-		  }
+		  { $$ = new GreaterEqNode($1, $3); }
 		| exp LESS exp
-		  { 
-			  // $$ = new LessNode($1, $3);
-		  }
+		  { $$ = new LessNode($1, $3); }
 		| exp LESSEQ exp
-		  { 
-			  // $$ = new LessEqNode($1, $3);
-		  }
+		  { $$ = new LessEqNode($1, $3); }
 		| NOT exp
-		  { 
-			  // $$ = new NotNode($2);
-		  }
+		  { $$ = new NotNode($2); }
 		| DASH term
-		  { 
-			  // $$ = new NegNode($2);
-		  }
+		  { $$ = new NegNode($2); }
 		| term 
-		  { 
-			  $$ = $1;
-		  }
+		  { $$ = $1; }
 
 assignExp	: lval ASSIGN exp
 		  { }
