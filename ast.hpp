@@ -146,12 +146,18 @@ private:
 	bool myIsReference;
 };
 
+class LValNode : public ExpNode{
+public:
+	LValNode(IDNode* id) : ExpNode(id->line(), id->col()){}
+	void unparse(std::ostream& out, int indent);
+};
+
 ///////////////////////
 //Children of ExpNode//
 ///////////////////////
 class AssignExpNode : public ExpNode{
 public:
-	AssignExpNode(ExpNode* srcExp) : ExpNode(srcExp->line(), srcExp->col()){}
+	AssignExpNode(LValNode* lVal, ExpNode* srcExp) : ExpNode(lVal->line(), lVal->col()){}
 	void unparse(std::ostream& out, int indent);
 };
 
@@ -162,7 +168,7 @@ public:
 
 class CallExpNode : public ExpNode{
 public:
-	CallExpNode(size_t l, size_t c) : ExpNode(l, c){}
+	CallExpNode(IDNode* id, std::list<ExpNode*>* paramList) : ExpNode(id->line(), id->col()){}
 };
 
 class CharLitNode : public ExpNode{
@@ -180,12 +186,6 @@ public:
 class IntLitNode : public ExpNode{
 public:
 	IntLitNode(size_t l, size_t c) : ExpNode(l, c){}
-	void unparse(std::ostream& out, int indent);
-};
-
-class LValNode : public ExpNode{
-public:
-	LValNode(IDNode* id) : ExpNode(id->line(), id->col()){}
 	void unparse(std::ostream& out, int indent);
 };
 

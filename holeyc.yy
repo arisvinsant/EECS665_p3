@@ -69,22 +69,22 @@ create new translation value types
    holeyc::TypeNode *                  		transType;
    holeyc::IDNode *                    		transID;
 
-	 holeyc::FnDeclNode * 							 		transFnDecl;
+	 holeyc::FnDeclNode * 					transFnDecl;
 	 std::list<holeyc::FormalDeclNode *> * 	transFormalsList;
 	 std::list<holeyc::FormalDeclNode *> * 	transFormals;
-	 holeyc::FormalDeclNode * 							transFormalDecl;
+	 holeyc::FormalDeclNode * 				transFormalDecl;
 	 std::list<holeyc::StmtNode *> *        transFnBody;
 	 std::list<holeyc::StmtNode *> *        transStmtList;
-	 holeyc::StmtNode * 									 	transStmt;
-	 holeyc::ExpNode * 									 		transExp;
-	 holeyc::AssignExpNode * 								transAssignExp;
-	 holeyc::CallExpNode * 									transCallExp;
+	 holeyc::StmtNode * 					transStmt;
+	 holeyc::ExpNode * 						transExp;
+	 holeyc::AssignExpNode * 				transAssignExp;
+	 holeyc::CallExpNode * 					transCallExp;
 	 holeyc::ExpNode *                      transTerm;
-	 holeyc::LValNode * 									 	transLVal;
-
-	 holeyc::IntLitNode	*										transIntToken;
-	 holeyc::CharLitNode	*									transCharToken;
-	 holeyc::StrLitNode	*										transStrToken;
+	 holeyc::LValNode * 					transLVal;
+	 holeyc::IntLitNode	*					transIntToken;
+	 holeyc::CharLitNode *					transCharToken;
+	 holeyc::StrLitNode	*					transStrToken;
+	 std::list<holeyc::ExpNode*> *			transExpList;		
 
 }
 
@@ -158,19 +158,19 @@ create new translation value types
 //Need to double check attribute types below here
 //Must be declared above in %union secition
 
-%type <transFnDecl>				fnDecl
-%type <transFormals> 			formals
+%type <transFnDecl>			fnDecl
+%type <transFormals> 		formals
 %type <transFormalsList> 	formalsList
 %type <transFormalDecl>		formalDecl
-%type <transFnBody> 			fnBody
+%type <transFnBody> 		fnBody
 %type <transStmtList> 		stmtList
-%type <transStmt> 				stmt
-%type <transExp> 					exp
+%type <transStmt> 			stmt
+%type <transExp> 			exp
 %type <transAssignExp> 		assignExp
-%type <transCallExp> 			callExp
-/* %type <transActualsList>	actualsList */
-%type <transTerm>					term
-%type <transLVal> 				lval
+%type <transCallExp> 		callExp
+%type <transExpList>		actualsList
+%type <transTerm>			term
+%type <transLVal> 			lval
 
 
 
@@ -251,32 +251,43 @@ type 	: INT
 				}
 
 
-fnDecl 			: type id formals fnBody
-							{ $$ = new FnDeclNode($1, $2, $3, $4); }
+fnDecl 		: type id formals fnBody
+				{ $$ = new FnDeclNode($1, $2, $3, $4); }
 
-formals 		: LPAREN RPAREN
-							{ }
-						| LPAREN formalsList RPAREN
-							{ $$ = $2; }
+formals 	: LPAREN RPAREN
+				{ $$ = new std::list<FormalDeclNode*>; }
+			| LPAREN formalsList RPAREN
+				{ $$ = $2; }
 
 
 formalsList : formalDecl
-							{ }
-						| formalDecl COMMA formalsList 
-							{ }
+				{ 
+					$$ = new std::list<FormalDeclNode*>;
+					$$->push_back($1);
+				}
+			| formalDecl COMMA formalsList 
+				{ 
+					$$ = $3;
+					$$->push_front($1);
+				}
 
 formalDecl	: type id
-		  				{ $$ = new FormalDeclNode($1, $2); }
+		  		{ $$ = new FormalDeclNode($1, $2); }
 
-fnBody			: LCURLY stmtList RCURLY
-		  				{ $$ = $2; }
+fnBody		: LCURLY stmtList RCURLY
+		  		{ $$ = $2; }
 
-stmtList 		: /* epsilon */
-							{ }
-						| stmtList stmt
-							{ }																											/* Still can't figure these out.  I'd assume it has something to do with creating 
-																																				 a list somewhere then pushing to the back of that list, but I can't get anything 
-																																				 to work, might have to ask drew for help here. */
+stmtList 	: /* epsilon */
+				{ 
+					std::list<StmtNode *> * startingStmt;
+					startingStmt = new std::list<StmtNode *>;
+					$$ = startingStmt;
+				}
+			| stmtList stmt
+				{ 
+					$$ = $1;
+					$1->push_back($2);
+				}																											
 
 stmt		: varDecl SEMICOLON
 		  		{ $$ = new DeclNode($1->line(), $1->col()); }
@@ -299,15 +310,12 @@ stmt		: varDecl SEMICOLON
 				| RETURN exp SEMICOLON
 					{ $$ = new ReturnStmtNode($2); }
 				| RETURN SEMICOLON
-					{                                           
-																											/* might need another constructor for
-																											ReturnNodes that can take no arguments? */ 
-					}
+					{ $$ = new ReturnStmtNode(nullptr); }
 				| callExp SEMICOLON
-					{ $$ = new CallStmtNode($1); }            // Same issue as AssignExpNode below
+					{ $$ = new CallStmtNode($1); }
 
 exp		: assignExp 
-				{ $$ = new AssignExpNode($1); }             // Is this right? More notes on this on line 344
+				{ $$ = $1; } 
 			| exp DASH exp
 				{ $$ = new MinusNode($1, $3); }
 			| exp CROSS exp
@@ -340,26 +348,29 @@ exp		: assignExp
 				{ $$ = $1; }
 
 assignExp	: lval ASSIGN exp
-																{	/* not sure what to do here, we either create the
-																			AssignExpNode here or above.  I think we should make
-																			it here and make the AssignExp above's rule be 
-																			{ $$ = $1 }, but the current definition for AssignExpNode
-																			in ast.hpp only accepts one argument, so it doesn't work here. */ }
+				{
+					$$ = new AssignExpNode($1, $3);
+				}
 
 callExp		: id LPAREN RPAREN
-		  			{ }
-							                       /* Same issue as AssignExpNode.  Should we have the above
-																		 CallExpNode fall through to here and actually create the node
-																		 here? */
-					| id LPAREN actualsList RPAREN
-						{ }											
-																		/* Might need another constructor that can also handle a 
-																		list as a second argument*/
+		  		{ 
+					// $$ = new CallExpNode($1, new std::list<ExpNode*>);
+				}
+			| id LPAREN actualsList RPAREN
+				{ 
+					// $$ = new CallExpNode($1, $3);
+				}											
 
 actualsList	: exp
-							{ }
-						| actualsList COMMA exp
-							{ }																						/* Same Issue as we have at the top.  There's probably some list manipulation that needs to happen here */
+				{
+					$$ = new std::list<ExpNode*>;
+					$$->push_back($1);
+				}
+			| actualsList COMMA exp
+				{ 
+					$$ = $1;
+					$$->push_back($3);
+				}	
 
 term 	: lval
 				{ $$ = $1; }
