@@ -290,7 +290,7 @@ stmtList 	: /* epsilon */
 				}																											
 
 stmt		: varDecl SEMICOLON
-		  		{ $$ = new DeclNode($1->line(), $1->col()); }
+		  		{ $$ = $1; }
 				| assignExp SEMICOLON
 					{ $$ = new AssignStmtNode($1); }
 				| lval DASHDASH SEMICOLON
@@ -308,9 +308,9 @@ stmt		: varDecl SEMICOLON
 				| WHILE LPAREN exp RPAREN LCURLY stmtList RCURLY
 					{ $$ = new WhileStmtNode($3, $6); }
 				| RETURN exp SEMICOLON
-					{ $$ = new ReturnStmtNode($2); }
+					{ $$ = new ReturnStmtNode($2, false); }
 				| RETURN SEMICOLON
-					{ $$ = new ReturnStmtNode(nullptr); }
+					{ $$ = new ReturnStmtNode(nullptr, true); }
 				| callExp SEMICOLON
 					{ $$ = new CallStmtNode($1); }
 
