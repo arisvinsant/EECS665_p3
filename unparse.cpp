@@ -176,6 +176,8 @@ void ReturnStmtNode::unparse(std::ostream& out, int indent){				// cant figure o
 
 void CallStmtNode::unparse(std::ostream& out, int indent){				// ??
 	doIndent(out, indent);
+	this->myCall->unparse(out, 0);
+	out<<";\n";
 }
 
 void AssignExpNode::unparse(std::ostream& out, int indent){
@@ -344,9 +346,13 @@ void RefNode::unparse(std::ostream& out, int indent){
 	this->myId->unparse(out, 0);
 }
 
-void CallExpNode::unparse(std::ostream& out, int indent){						// this one is more clear what to do, but does callstmtnode affect anything we should do here?
+void CallExpNode::unparse(std::ostream& out, int indent){
 	doIndent(out, indent);
-	
+	this->myId->unparse(out, 0);
+	out << "(";
+	for (auto param : *myParams)
+		param->unparse(out, 0);
+	out << ")";
 }
 
 } // End namespace holeyc

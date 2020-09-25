@@ -176,8 +176,12 @@ public:
 
 class CallExpNode : public ExpNode{
 public:
-	CallExpNode(IDNode* id, std::list<ExpNode*>* paramList) : ExpNode(id->line(), id->col()){}
+	CallExpNode(IDNode* id, std::list<ExpNode*>* paramList) : ExpNode(id->line(), id->col()), myId(id), myParams(paramList){}
 	void unparse(std::ostream& out, int indent);
+
+private:
+	IDNode* myId;
+	std::list<ExpNode*>* myParams;
 };
 
 class NullPtrNode : public ExpNode{
@@ -247,8 +251,11 @@ private:
 
 class CallStmtNode : public StmtNode{
 public:
-	CallStmtNode(CallExpNode* call) : StmtNode(call->line(), call->col()){}
+	CallStmtNode(CallExpNode* call) : StmtNode(call->line(), call->col()), myCall(call){}
 	void unparse(std::ostream& out, int indent);
+
+private:
+	CallExpNode* myCall;
 };
 
 class DeclNode : public StmtNode{
