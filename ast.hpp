@@ -410,14 +410,18 @@ public:
 
 class DerefNode : public LValNode{
 public:
-	DerefNode(IDNode* accessId) : LValNode(accessId){}
+	DerefNode(IDNode* accessId) : LValNode(accessId), myId(accessId){}
 	void unparse(std::ostream& out, int indent);
+private:
+	IDNode * myId;
 };
 
 class RefNode : public LValNode{
 public:
-	RefNode(IDNode* accessId) : LValNode(accessId){}
+	RefNode(IDNode* accessId) : LValNode(accessId), myId(accessId) {}
 	void unparse(std::ostream& out, int indent);
+private:
+	IDNode * myId;
 };
 
 class IndexNode : public LValNode{

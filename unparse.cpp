@@ -225,7 +225,9 @@ void IndexNode::unparse(std::ostream& out, int indent){
 }
 
 void DerefNode::unparse(std::ostream& out, int indent){
-	
+	doIndent(out, indent);
+	out << "@";
+	this->myId->unparse(out, 0);
 }
 
 void RefNode::unparse(std::ostream& out, int indent){
