@@ -81,11 +81,11 @@ create new translation value types
 	 holeyc::CallExpNode * 					transCallExp;
 	 holeyc::ExpNode *                      transTerm;
 	 holeyc::LValNode * 					transLVal;
-	 holeyc::IntLitNode	*					transIntToken;
-	 holeyc::CharLitNode *					transCharToken;
-	 holeyc::StrLitNode	*					transStrToken;
-	 std::list<holeyc::ExpNode*> *			transExpList;		
-
+	 holeyc::IntLitToken *					transIntToken;
+	 holeyc::CharLitToken *					transCharToken;
+	 holeyc::StrToken *						transStrToken;
+	 std::list<holeyc::ExpNode*> *			transExpList;
+	 
 }
 
 %define parse.assert
@@ -381,9 +381,9 @@ term 	: lval
 			| INTLITERAL 
 				{ $$ = new IntLitNode($1->line(), $1->col(), $1); }
 			| STRLITERAL 
-				{ $$ = new StrLitNode($1->line(), $1->col()); }
+				{ $$ = new StrLitNode($1->line(), $1->col(), $1); }
 			| CHARLIT 
-				{ $$ = new CharLitNode($1->line(), $1->col()); }
+				{ $$ = new CharLitNode($1->line(), $1->col(), $1); }
 			| TRUE
 				{ $$ = new TrueNode($1); }
 			| FALSE

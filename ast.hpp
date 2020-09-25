@@ -186,7 +186,7 @@ public:
 class CharLitNode : public ExpNode{
 public:
 	CharLitNode(size_t l, size_t c, CharLitToken* charIn) : ExpNode(l, c){
-		myChar = charIn->value();
+		myChar = charIn->val();
 	}
 	void unparse(std::ostream& out, int indent);
 private:
@@ -195,8 +195,8 @@ private:
 
 class IntLitNode : public ExpNode{
 public:
-	IntLitNode(size_t l, size_t c, IntLitToken* intIn) : ExpNode(l, c),{
-		myInt = intIn->value();
+	IntLitNode(size_t l, size_t c, IntLitToken* intIn) : ExpNode(l, c){
+		myInt = intIn->num();
 	}
 	void unparse(std::ostream& out, int indent);
 private:
@@ -205,8 +205,8 @@ private:
 
 class StrLitNode : public ExpNode{
 public:
-	StrLitNode(size_t l, size_t c, StrLitToken* strIn) : ExpNode(l, c){
-		myStr = strIn->value();
+	StrLitNode(size_t l, size_t c, StrToken* strIn) : ExpNode(l, c){
+		myStr = strIn->str();
 	}
 	void unparse(std::ostream& out, int indent);
 private:
