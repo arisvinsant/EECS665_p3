@@ -18,6 +18,7 @@ void justin (int a) {
     y= m*m;
     y = z/t;
     y = a&&y;
+    x = 3/1+5;
     c=v||d;
     if(x==1){
       y=3;
