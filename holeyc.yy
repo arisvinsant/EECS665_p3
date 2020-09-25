@@ -257,7 +257,7 @@ fnDecl 			: type id formals fnBody
 formals 		: LPAREN RPAREN
 							{ }
 						| LPAREN formalsList RPAREN
-							{ }
+							{ $$ = $2; }
 
 
 formalsList : formalDecl
@@ -269,12 +269,14 @@ formalDecl	: type id
 		  				{ $$ = new FormalDeclNode($1, $2); }
 
 fnBody			: LCURLY stmtList RCURLY
-		  				{ }
+		  				{ $$ = $2; }
 
 stmtList 		: /* epsilon */
 							{ }
 						| stmtList stmt
-							{ }
+							{ }																											/* Still can't figure these out.  I'd assume it has something to do with creating 
+																																				 a list somewhere then pushing to the back of that list, but I can't get anything 
+																																				 to work, might have to ask drew for help here. */
 
 stmt		: varDecl SEMICOLON
 		  		{ $$ = new DeclNode($1->line(), $1->col()); }
@@ -342,9 +344,7 @@ assignExp	: lval ASSIGN exp
 																			AssignExpNode here or above.  I think we should make
 																			it here and make the AssignExp above's rule be 
 																			{ $$ = $1 }, but the current definition for AssignExpNode
-																			only accepts one argument, so it doesn't work here. 
-																			If this doesn't make sense, the way that LVals are handled
-																			below is how I think this should be handled.*/}
+																			in ast.hpp only accepts one argument, so it doesn't work here. */}
 
 callExp		: id LPAREN RPAREN
 		  			{ }
@@ -359,60 +359,44 @@ callExp		: id LPAREN RPAREN
 actualsList	: exp
 							{ }
 						| actualsList COMMA exp
-							{ }
+							{ }																						/* Same Issue as we have at the top.  There's probably some list manipulation that needs to happen here */
 
 term 	: lval
 				{ $$ = $1; }
 			| callExp
 				{ $$ = $1; }
 			| NULLPTR
-				{ 
-					$$ = new NullPtrNode($1->line(), $1->col());
-				}
+				{ $$ = new NullPtrNode($1->line(), $1->col()); }
 			| INTLITERAL 
-				{ 
-					// $$ = new IntLitNode($1);       /* Not sure what the fix is but the constructor doesn't like these */
-				}
+				{ /* $$ = new IntLitNode($1); */ }     					/* Not sure what the fix is but the constructor doesn't like these */
 			| STRLITERAL 
-				{ 
-					// $$ = new StrLitNode($1);
-				}
+				{ /* $$ = new StrLitNode($1); */ }
 			| CHARLIT 
-				{ 
-					// $$ = new CharLitNode($1);
-				}
+				{ /* $$ = new CharLitNode($1); */ }
 			| TRUE
-				{ 
-					$$ = new TrueNode($1);
-				}
+				{ $$ = new TrueNode($1); }
 			| FALSE
-				{ 
-					$$ = new FalseNode($1);
-				}
+				{ $$ = new FalseNode($1); }
 			| LPAREN exp RPAREN
 				{ $$ = $2; }
 
-lval		: id
-		  {
-			  // $$ = new LValNode($1);
-		  }
-		| id LBRACE exp RBRACE
-		  {
-			  // $$ = new IndexNode($1, $3);
-		  }
-		| AT id
-		  {
-			  //Not sure what AT does
-		  }
-		| CARAT id
-		  {
-			  //Not sure what CARAT does
-		  }
+lval	: id
+				{ $$ = new LValNode($1); }
+			| id LBRACE exp RBRACE
+				{
+					$$ = new IndexNode($1, $3);
+				}
+			| AT id
+				{
+					$$ = new DerefNode($2);
+				}
+			| CARAT id
+				{
+					$$ = new RefNode($2);
+				}
 
 id		: ID
-		  {
-			// $$ = new IDNode($1);
-		  }
+		  { $$ = new IDNode($1); }
 	
 %%
 

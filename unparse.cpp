@@ -216,4 +216,20 @@ void FalseNode::unparse(std::ostream& out, int indent){
 	
 }
 
+void LValNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void IndexNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void DerefNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void RefNode::unparse(std::ostream& out, int indent){
+	
+}
+
 } // End namespace holeyc

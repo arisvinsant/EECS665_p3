@@ -186,6 +186,7 @@ public:
 class LValNode : public ExpNode{
 public:
 	LValNode(IDNode* id) : ExpNode(id->line(), id->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class NullPtrNode : public ExpNode{
@@ -407,19 +408,22 @@ public:
 //Children of LValNodeNode//
 ////////////////////////////
 
-class DerefNode : public ExpNode{
+class DerefNode : public LValNode{
 public:
-	DerefNode(IDNode* accessId) : ExpNode(accessId->line(), accessId->col()){}
+	DerefNode(IDNode* accessId) : LValNode(accessId){}
+	void unparse(std::ostream& out, int indent);
 };
 
-class RefNode : public ExpNode{
+class RefNode : public LValNode{
 public:
-	RefNode(IDNode* accessId) : ExpNode(accessId->line(), accessId->col()){}
+	RefNode(IDNode* accessId) : LValNode(accessId){}
+	void unparse(std::ostream& out, int indent);
 };
 
-class IndexNode : public ExpNode{
+class IndexNode : public LValNode{
 public:
-	IndexNode(IDNode* accessId, ExpNode* offset) : ExpNode(accessId->line(), accessId->col()){}
+	IndexNode(IDNode* accessId, ExpNode* offset) : LValNode(accessId){}
+	void unparse(std::ostream& out, int indent);
 };
 
 ///////////////////////////
