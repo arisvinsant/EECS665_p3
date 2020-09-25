@@ -188,4 +188,32 @@ void NegNode::unparse(std::ostream& out, int indent){
 	
 }
 
+void FormalDeclNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void NullPtrNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void IntLitNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void StrLitNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void CharLitNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void TrueNode::unparse(std::ostream& out, int indent){
+	
+}
+
+void FalseNode::unparse(std::ostream& out, int indent){
+	
+}
+
 } // End namespace holeyc

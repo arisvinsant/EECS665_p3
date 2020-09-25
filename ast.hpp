@@ -168,16 +168,19 @@ public:
 class CharLitNode : public ExpNode{
 public:
 	CharLitNode(CharLitToken* charToken) : ExpNode(charToken->line(), charToken->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class FalseNode : public ExpNode{
 public:
 	FalseNode(Token* token) : ExpNode(token->line(), token->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class IntLitNode : public ExpNode{
 public:
 	IntLitNode(IntLitToken* intToken) : ExpNode(intToken->line(), intToken->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class LValNode : public ExpNode{
@@ -188,16 +191,19 @@ public:
 class NullPtrNode : public ExpNode{
 public:
 	NullPtrNode(size_t l, size_t c) : ExpNode(l, c){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class StrLitNode : public ExpNode{
 public:
 	StrLitNode(StrToken* strToken) : ExpNode(strToken->line(), strToken->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class TrueNode : public ExpNode{
 public:
 	TrueNode(Token* token) : ExpNode(token->line(), token->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 class UnaryExpNode : public ExpNode{
@@ -463,6 +469,7 @@ private:
 class FormalDeclNode : public DeclNode{
 public:
 	FormalDeclNode(TypeNode* type, IDNode* id) : DeclNode(type->line(), type->col()){}
+	void unparse(std::ostream& out, int indent);
 };
 
 } //End namespace holeyc

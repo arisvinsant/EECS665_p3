@@ -186,38 +186,33 @@ create new translation value types
 %%
 
 program 	: globals
-		  {
-		  $$ = new ProgramNode($1);
-		  *root = $$;
-		  }
+						{
+							$$ = new ProgramNode($1);
+							*root = $$;
+						}
 
 globals 	: globals decl 
-		  {
-		  $$ = $1;
-		  DeclNode * aGlobalDecl = $2;
-		  $1->push_back(aGlobalDecl);
-		  }
-		| /* epsilon */
-		  {
-		  std::list<DeclNode *> * startingGlobals;
-		  startingGlobals = new std::list<DeclNode *>();
-	 	  $$ = startingGlobals;
-		  }
-		; 
+						{
+							$$ = $1;
+							DeclNode * aGlobalDecl = $2;
+							$1->push_back(aGlobalDecl);
+						}
+					| /* epsilon */
+						{
+							std::list<DeclNode *> * startingGlobals;
+							startingGlobals = new std::list<DeclNode *>();
+							$$ = startingGlobals;
+						} 
 
-decl 		: varDecl SEMICOLON
-		  {
-		  }
-		| fnDecl 
-		  {
-		  }
+decl 			: varDecl SEMICOLON { $$ = $1; }
+					| fnDecl  { $$ = $1; }
 
 varDecl 	: type id
-		  { 
-		  	size_t typeLine = $1->line();
-		  	size_t typeCol = $1->col();
-		  	$$ = new VarDeclNode(typeLine, typeCol, $1, $2);
-		  }
+						{ 
+							size_t typeLine = $1->line();
+							size_t typeCol = $1->col();
+							$$ = new VarDeclNode(typeLine, typeCol, $1, $2);
+						}
 
 type 	: INT
 				{
@@ -256,140 +251,146 @@ type 	: INT
 				}
 
 
-fnDecl 		: type id formals fnBody
-		  { 
-			  $$ = new FnDeclNode($1, $2, $3, $4);
-		  }
+fnDecl 			: type id formals fnBody
+							{ $$ = new FnDeclNode($1, $2, $3, $4); }
 
-formals 	: LPAREN RPAREN
-		  { }
-		| LPAREN formalsList RPAREN
-		  { }
+formals 		: LPAREN RPAREN
+							{ }
+						| LPAREN formalsList RPAREN
+							{ }
 
 
-formalsList	: formalDecl
-		  { }
-		| formalDecl COMMA formalsList 
-		  { }
+formalsList : formalDecl
+							{ }
+						| formalDecl COMMA formalsList 
+							{ }
 
-formalDecl 	: type id
-		  { }
+formalDecl	: type id
+		  				{ $$ = new FormalDeclNode($1, $2); }
 
-fnBody		: LCURLY stmtList RCURLY
-		  { }
+fnBody			: LCURLY stmtList RCURLY
+		  				{ }
 
-stmtList 	: /* epsilon */
-		  { }
-		| stmtList stmt
-		  { }
+stmtList 		: /* epsilon */
+							{ }
+						| stmtList stmt
+							{ }
 
 stmt		: varDecl SEMICOLON
-		  { $$ = new DeclNode($1->line(), $1->col()); }
-		| assignExp SEMICOLON
-		  { $$ = new AssignStmtNode($1); }
-		| lval DASHDASH SEMICOLON
-		  { $$ = new PostDecStmtNode($1); }
-		| lval CROSSCROSS SEMICOLON
-		  { $$ = new PostIncStmtNode($1); }
-		| FROMCONSOLE lval SEMICOLON
-		  { $$ = new FromConsoleStmtNode($2); }
-		| TOCONSOLE exp SEMICOLON
-		  { $$ = new ToConsoleStmtNode($2); }
-		| IF LPAREN exp RPAREN LCURLY stmtList RCURLY
-		   { $$ = new IfStmtNode($3, $6); }
-		| IF LPAREN exp RPAREN LCURLY stmtList RCURLY ELSE LCURLY stmtList RCURLY
-		  { $$ = new IfElseStmtNode($3, $6, $10); }
-		| WHILE LPAREN exp RPAREN LCURLY stmtList RCURLY
-		  { $$ = new WhileStmtNode($3, $6); }
-		| RETURN exp SEMICOLON
-		  { $$ = new ReturnStmtNode($2); }
-		| RETURN SEMICOLON
-		  {                                           /*NOT SURE WHAT TO DO HERE */ }
-		| callExp SEMICOLON
-		  { $$ = new CallStmtNode($1); }
+		  		{ $$ = new DeclNode($1->line(), $1->col()); }
+				| assignExp SEMICOLON
+					{ $$ = new AssignStmtNode($1); }
+				| lval DASHDASH SEMICOLON
+					{ $$ = new PostDecStmtNode($1); }
+				| lval CROSSCROSS SEMICOLON
+					{ $$ = new PostIncStmtNode($1); }
+				| FROMCONSOLE lval SEMICOLON
+					{ $$ = new FromConsoleStmtNode($2); }
+				| TOCONSOLE exp SEMICOLON
+					{ $$ = new ToConsoleStmtNode($2); }
+				| IF LPAREN exp RPAREN LCURLY stmtList RCURLY
+					{ $$ = new IfStmtNode($3, $6); }
+				| IF LPAREN exp RPAREN LCURLY stmtList RCURLY ELSE LCURLY stmtList RCURLY
+					{ $$ = new IfElseStmtNode($3, $6, $10); }
+				| WHILE LPAREN exp RPAREN LCURLY stmtList RCURLY
+					{ $$ = new WhileStmtNode($3, $6); }
+				| RETURN exp SEMICOLON
+					{ $$ = new ReturnStmtNode($2); }
+				| RETURN SEMICOLON
+					{                                           
+																											/* might need another constructor for
+																											ReturnNodes that can take no arguments? */ 
+					}
+				| callExp SEMICOLON
+					{ $$ = new CallStmtNode($1); }            // Same issue as AssignExpNode below
 
 exp		: assignExp 
-		  { $$ = new AssignExpNode($1); }
-		| exp DASH exp
-		  { $$ = new MinusNode($1, $3); }
-		| exp CROSS exp
-		  { $$ = new PlusNode($1, $3); }
-		| exp STAR exp
-		  { $$ = new TimesNode($1, $3); }
-		| exp SLASH exp
-		  { $$ = new DivideNode($1, $3); }
-		| exp AND exp
-		  { $$ = new AndNode($1, $3); }
-		| exp OR exp
-		  { $$ = new OrNode($1, $3); }
-		| exp EQUALS exp
-		  { $$ = new EqualsNode($1, $3); }
-		| exp NOTEQUALS exp
-		  { $$ = new NotEqualsNode($1, $3); }
-		| exp GREATER exp
-		  { $$ = new GreaterNode($1, $3); }
-		| exp GREATEREQ exp
-		  { $$ = new GreaterEqNode($1, $3); }
-		| exp LESS exp
-		  { $$ = new LessNode($1, $3); }
-		| exp LESSEQ exp
-		  { $$ = new LessEqNode($1, $3); }
-		| NOT exp
-		  { $$ = new NotNode($2); }
-		| DASH term
-		  { $$ = new NegNode($2); }
-		| term 
-		  { $$ = $1; }
+				{ $$ = new AssignExpNode($1); }             // Is this right? More notes on this on line 344
+			| exp DASH exp
+				{ $$ = new MinusNode($1, $3); }
+			| exp CROSS exp
+				{ $$ = new PlusNode($1, $3); }
+			| exp STAR exp
+				{ $$ = new TimesNode($1, $3); }
+			| exp SLASH exp
+				{ $$ = new DivideNode($1, $3); }
+			| exp AND exp
+				{ $$ = new AndNode($1, $3); }
+			| exp OR exp
+				{ $$ = new OrNode($1, $3); }
+			| exp EQUALS exp
+				{ $$ = new EqualsNode($1, $3); }
+			| exp NOTEQUALS exp
+				{ $$ = new NotEqualsNode($1, $3); }
+			| exp GREATER exp
+				{ $$ = new GreaterNode($1, $3); }
+			| exp GREATEREQ exp
+				{ $$ = new GreaterEqNode($1, $3); }
+			| exp LESS exp
+				{ $$ = new LessNode($1, $3); }
+			| exp LESSEQ exp
+				{ $$ = new LessEqNode($1, $3); }
+			| NOT exp
+				{ $$ = new NotNode($2); }
+			| DASH term
+				{ $$ = new NegNode($2); }
+			| term 
+				{ $$ = $1; }
 
 assignExp	: lval ASSIGN exp
-		  { }
+																		{ /* not sure what to do here, we either create the
+																			AssignExpNode here or above.  I think we should make
+																			it here and make the AssignExp above's rule be 
+																			{ $$ = $1 }, but the current definition for AssignExpNode
+																			only accepts one argument, so it doesn't work here. 
+																			If this doesn't make sense, the way that LVals are handled
+																			below is how I think this should be handled.*/}
 
 callExp		: id LPAREN RPAREN
-		  { }
-		| id LPAREN actualsList RPAREN
-		  { }
+		  			{ }
+							                       /* Same issue as AssignExpNode.  Should we have the above
+																		 CallExpNode fall through to here and actually create the node
+																		 here? */
+					| id LPAREN actualsList RPAREN
+						{ }											
+																		/* Might need another constructor that can also handle a 
+																		list as a second argument*/
 
 actualsList	: exp
-		  { }
-		| actualsList COMMA exp
-		  { }
+							{ }
+						| actualsList COMMA exp
+							{ }
 
 term 	: lval
-		  { 
-			  $$ = $1;
-		  }
-		| callExp
-		  { 
-			  //Not sure what this does
-		  }
-		| NULLPTR
-		  { 
-			  // $$ = new NullPtrNode($1->line(), $1->col());
-		  }
-		| INTLITERAL 
-		  { 
-			  // $$ = new IntLitNode($1);
-		  }
-		| STRLITERAL 
-		  { 
-			  // $$ = new StrLitNode($1);
-		  }
-		| CHARLIT 
-		  { 
-			  // $$ = new CharLitNode($1);
-		  }
-		| TRUE
-		  { 
-			  // $$ = new TrueNode($1);
-		  }
-		| FALSE
-		  { 
-			  // $$ = new FalseNode($1);
-		  }
-		| LPAREN exp RPAREN
-		  { 
-			$$ = $2;
-		  }
+				{ $$ = $1; }
+			| callExp
+				{ $$ = $1; }
+			| NULLPTR
+				{ 
+					$$ = new NullPtrNode($1->line(), $1->col());
+				}
+			| INTLITERAL 
+				{ 
+					// $$ = new IntLitNode($1);       /* Not sure what the fix is but the constructor doesn't like these */
+				}
+			| STRLITERAL 
+				{ 
+					// $$ = new StrLitNode($1);
+				}
+			| CHARLIT 
+				{ 
+					// $$ = new CharLitNode($1);
+				}
+			| TRUE
+				{ 
+					$$ = new TrueNode($1);
+				}
+			| FALSE
+				{ 
+					$$ = new FalseNode($1);
+				}
+			| LPAREN exp RPAREN
+				{ $$ = $2; }
 
 lval		: id
 		  {
