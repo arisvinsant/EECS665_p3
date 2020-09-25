@@ -177,42 +177,51 @@ public:
 	void unparse(std::ostream& out, int indent);
 };
 
-class CharLitNode : public ExpNode{
-public:
-	CharLitNode(size_t l, size_t c) : ExpNode(l, c){}
-	void unparse(std::ostream& out, int indent);
-};
-
-class FalseNode : public ExpNode{
-public:
-	FalseNode(Token* token) : ExpNode(token->line(), token->col()){}
-	void unparse(std::ostream& out, int indent);
-};
-
-class IntLitNode : public ExpNode{
-public:
-	IntLitNode(size_t l, size_t c, IntLitNode* intIn) : ExpNode(l, c), myInt( /* ????? */ ){}
-	void unparse(std::ostream& out, int indent);
-
-private:
-	int* myInt;
-};
-
 class NullPtrNode : public ExpNode{
 public:
 	NullPtrNode(size_t l, size_t c) : ExpNode(l, c){}
 	void unparse(std::ostream& out, int indent);
 };
 
+class CharLitNode : public ExpNode{
+public:
+	CharLitNode(size_t l, size_t c, CharLitToken* charIn) : ExpNode(l, c){
+		myChar = charIn->value();
+	}
+	void unparse(std::ostream& out, int indent);
+private:
+	char myChar;
+};
+
+class IntLitNode : public ExpNode{
+public:
+	IntLitNode(size_t l, size_t c, IntLitToken* intIn) : ExpNode(l, c),{
+		myInt = intIn->value();
+	}
+	void unparse(std::ostream& out, int indent);
+private:
+	int myInt;
+};
+
 class StrLitNode : public ExpNode{
 public:
-	StrLitNode(size_t l, size_t c) : ExpNode(l, c){}
+	StrLitNode(size_t l, size_t c, StrLitToken* strIn) : ExpNode(l, c){
+		myStr = strIn->value();
+	}
 	void unparse(std::ostream& out, int indent);
+private:
+	std::string myStr;
 };
 
 class TrueNode : public ExpNode{
 public:
 	TrueNode(Token* token) : ExpNode(token->line(), token->col()){}
+	void unparse(std::ostream& out, int indent);
+};
+
+class FalseNode : public ExpNode{
+public:
+	FalseNode(Token* token) : ExpNode(token->line(), token->col()){}
 	void unparse(std::ostream& out, int indent);
 };
 

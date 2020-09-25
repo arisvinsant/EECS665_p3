@@ -213,23 +213,23 @@ void NullPtrNode::unparse(std::ostream& out, int indent){
 }
 
 void IntLitNode::unparse(std::ostream& out, int indent){
-	
+	out << myInt;
 }
 
 void StrLitNode::unparse(std::ostream& out, int indent){
-	
+	out << myStr;
 }
 
 void CharLitNode::unparse(std::ostream& out, int indent){
-	
+	out << myChar;
 }
 
 void TrueNode::unparse(std::ostream& out, int indent){
-	
+	out << "True";
 }
 
 void FalseNode::unparse(std::ostream& out, int indent){
-	
+	out << "False";
 }
 
 void LValNode::unparse(std::ostream& out, int indent){
