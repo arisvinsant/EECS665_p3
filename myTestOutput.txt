@@ -1,0 +1,54 @@
+int * ptr;
+int val;
+int * d;
+bool d;
+bool * x;
+char y;
+char * g;
+void justin(int a) {
+	while (x) {
+		@ptr = @b;
+		m--;
+		n++;
+		FROMCONSOLE x;
+		TOCONSOLE y;
+		y = n - m;
+		y = n + m;
+		y = m * m;
+		y = z / t;
+		y = a && y;
+		c = v || d;
+		if (x == 1) {
+			y = 3;
+		}
+		if (y == 3) {
+			y = 4;
+		} else {
+			b = 1;
+		}
+		while (y == 0) {
+			m++;
+		}
+		y = z = f;
+		s = v != s;
+		g = d == s;
+		a = c > f;
+		d = f >= as;
+		f = f < s;
+		a = sd <= as;
+		f = !z;
+		f = -a;
+		m = a[3 - 5];
+		^k = a;
+		ptr = ^val;
+		@ptr = justin(a);
+		justin(g);
+		justin();
+		g = NULLPTR;
+		a = "justin";
+		g = True;
+		d = False;
+		array[7] = 7;
+	}
+	return x + 1;
+}

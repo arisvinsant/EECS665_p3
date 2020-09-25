@@ -310,7 +310,7 @@ stmt		: varDecl SEMICOLON
 				| RETURN exp SEMICOLON
 					{ $$ = new ReturnStmtNode($2, false); }
 				| RETURN SEMICOLON
-					{ $$ = new ReturnStmtNode(nullptr, true); }
+					{ $$ = new ReturnStmtNode($2->line(), $2->col(), true); }
 				| callExp SEMICOLON
 					{ $$ = new CallStmtNode($1); }
 

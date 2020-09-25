@@ -165,16 +165,16 @@ void WhileStmtNode::unparse(std::ostream& out, int indent){
 }
 
 void ReturnStmtNode::unparse(std::ostream& out, int indent){				// cant figure out how to get this working with no return arguments
-	doIndent(out, indent);
+	doIndent(out, indent);																						// the issue is that in the constructor for return stmt node
 	out<<"return";
-	if(!(this->empty)){
+	if(!this->empty){
 		out<<" ";
 		this->myExp->unparse(out, 0);
 	}
 	out<<";\n";
 }
 
-void CallStmtNode::unparse(std::ostream& out, int indent){				// ??
+void CallStmtNode::unparse(std::ostream& out, int indent){
 	doIndent(out, indent);
 	this->myCall->unparse(out, 0);
 	out<<";\n";

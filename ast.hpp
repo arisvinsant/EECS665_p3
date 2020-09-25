@@ -313,7 +313,9 @@ private:
 
 class ReturnStmtNode : public StmtNode{
 public:
+	// The issue is right here.  When no values are passed, returnId = nullptr, then we try to call nullptr->line() which seg faults
 	ReturnStmtNode(ExpNode* returnId, bool emptyIn) : StmtNode(returnId->line(), returnId->col()), myExp(returnId), empty(emptyIn){}
+	ReturnStmtNode(size_t l, size_t c, bool emptyIn) : StmtNode(l, c), empty(emptyIn){}
 	void unparse(std::ostream& out, int indent);
 
 private:
