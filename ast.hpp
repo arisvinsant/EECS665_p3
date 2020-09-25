@@ -167,7 +167,7 @@ public:
 
 class CharLitNode : public ExpNode{
 public:
-	CharLitNode(CharLitToken* charToken) : ExpNode(charToken->line(), charToken->col()){}
+	CharLitNode(size_t l, size_t c) : ExpNode(l, c){}
 	void unparse(std::ostream& out, int indent);
 };
 
@@ -179,7 +179,7 @@ public:
 
 class IntLitNode : public ExpNode{
 public:
-	IntLitNode(IntLitToken* intToken) : ExpNode(intToken->line(), intToken->col()){}
+	IntLitNode(size_t l, size_t c) : ExpNode(l, c){}
 	void unparse(std::ostream& out, int indent);
 };
 
@@ -197,7 +197,7 @@ public:
 
 class StrLitNode : public ExpNode{
 public:
-	StrLitNode(StrToken* strToken) : ExpNode(strToken->line(), strToken->col()){}
+	StrLitNode(size_t l, size_t c) : ExpNode(l, c){}
 	void unparse(std::ostream& out, int indent);
 };
 

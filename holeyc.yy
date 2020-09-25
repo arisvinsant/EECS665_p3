@@ -340,11 +340,11 @@ exp		: assignExp
 				{ $$ = $1; }
 
 assignExp	: lval ASSIGN exp
-																		{ /* not sure what to do here, we either create the
+																{	/* not sure what to do here, we either create the
 																			AssignExpNode here or above.  I think we should make
 																			it here and make the AssignExp above's rule be 
 																			{ $$ = $1 }, but the current definition for AssignExpNode
-																			in ast.hpp only accepts one argument, so it doesn't work here. */}
+																			in ast.hpp only accepts one argument, so it doesn't work here. */ }
 
 callExp		: id LPAREN RPAREN
 		  			{ }
@@ -368,11 +368,11 @@ term 	: lval
 			| NULLPTR
 				{ $$ = new NullPtrNode($1->line(), $1->col()); }
 			| INTLITERAL 
-				{ /* $$ = new IntLitNode($1); */ }     					/* Not sure what the fix is but the constructor doesn't like these */
+				{ $$ = new IntLitNode($1->line(), $1->col()); }
 			| STRLITERAL 
-				{ /* $$ = new StrLitNode($1); */ }
+				{ $$ = new StrLitNode($1->line(), $1->col()); }
 			| CHARLIT 
-				{ /* $$ = new CharLitNode($1); */ }
+				{ $$ = new CharLitNode($1->line(), $1->col()); }
 			| TRUE
 				{ $$ = new TrueNode($1); }
 			| FALSE
