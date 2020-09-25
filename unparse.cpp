@@ -290,10 +290,11 @@ void FormalDeclNode::unparse(std::ostream& out, int indent){
 
 void NullPtrNode::unparse(std::ostream& out, int indent){
 	doIndent(out, indent);
-	
+	out<<"NULLPTR";
 }
 
 void IntLitNode::unparse(std::ostream& out, int indent){
+	doIndent(out, indent);
 	out << myInt;
 }
 
@@ -325,7 +326,10 @@ void LValNode::unparse(std::ostream& out, int indent){
 
 void IndexNode::unparse(std::ostream& out, int indent){
 	doIndent(out, indent);
-	
+	this->myId->unparse(out, 0);
+	out<<"[";
+	this->myExp->unparse(out, 0);
+	out<<"]";
 }
 
 void DerefNode::unparse(std::ostream& out, int indent){
@@ -336,10 +340,11 @@ void DerefNode::unparse(std::ostream& out, int indent){
 
 void RefNode::unparse(std::ostream& out, int indent){
 	doIndent(out, indent);
-
+	out << "^";
+	this->myId->unparse(out, 0);
 }
 
-void CallExpNode::unparse(std::ostream& out, int indent){
+void CallExpNode::unparse(std::ostream& out, int indent){						// this one is more clear what to do, but does callstmtnode affect anything we should do here?
 	doIndent(out, indent);
 	
 }

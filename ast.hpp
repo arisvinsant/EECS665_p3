@@ -525,8 +525,12 @@ private:
 
 class IndexNode : public LValNode{
 public:
-	IndexNode(IDNode* accessId, ExpNode* offset) : LValNode(accessId){}
+	IndexNode(IDNode* accessId, ExpNode* offset) : LValNode(accessId), myId(accessId), myExp(offset){}
 	void unparse(std::ostream& out, int indent);
+
+private:
+	IDNode* myId;
+	ExpNode* myExp;
 };
 
 ///////////////////////////
